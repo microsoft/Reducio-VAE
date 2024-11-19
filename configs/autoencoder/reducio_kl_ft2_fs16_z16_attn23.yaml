@@ -124,10 +124,10 @@ data:
           }
         data_dir: /home/t2vg-a100-G4-13/t2vgusw2_videos
         metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_videos
-        metadata_folder_name: "webvid10m_meta"
+        metadata_folder_name: "pexels_meta"
         split: "train"
-        cut: "13M"   # "10M"
-        key: "wmrm_all_RandomSample1M_clean"
+        cut: "400k"   
+        key: "RandomSample_clean"
         subsample: 1
         first_stage_key: "jpg"
         cond_stage_key: "txt"
@@ -152,7 +152,7 @@ data:
         metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
         metadata_folder_name: "shutterstock_val_1k_split"
         split: "val"
-        cut: "5m"   # "10M"
+        cut: "5m"
         key: "1k_split"
         subsample: 0.25
         first_stage_key: "jpg"
@@ -178,7 +178,7 @@ data:
         metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
         metadata_folder_name: "shutterstock_val_1k_split"
         split: "val"
-        cut: "5m"   # "10M"
+        cut: "5m"
         key: "1k_split"
         subsample: 0.25
         first_stage_key: "jpg"

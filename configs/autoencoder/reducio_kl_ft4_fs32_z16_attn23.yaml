@@ -13,7 +13,7 @@ Warm_min_lr: &Warm_min_lr 1e-6
 Batch_size: &Batch_size 4
 Data_Dir: &Data_Dir /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/shutterstock_val_1k_split
 Metadata_Dir: &Metadata_Dir  /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
-Metadata_Folder: &Metadata_Folder "webvid10m_meta"
+Metadata_Folder: &Metadata_Folder "pexels_meta"
 
 model:
   base_learning_rate: 2e-5
@@ -128,8 +128,8 @@ data:
         metadata_dir: *Metadata_Dir
         metadata_folder_name: *Metadata_Folder
         split: "train"
-        cut: "13M"   # "10M"
-        key: "wmrm_all_RandomSample1M_clean"
+        cut: "400k"
+        key: "RandomSample_clean"
         subsample: 1
         first_stage_key: "jpg"
         cond_stage_key: "txt"
@@ -154,7 +154,7 @@ data:
         metadata_dir: *Metadata_Dir
         metadata_folder_name: *Metadata_Folder
         split: "val"
-        cut: "5m"   # "10M"
+        cut: "5m"
         key: "1k_split"
         subsample: 1
         first_stage_key: "jpg"
@@ -180,7 +180,7 @@ data:
         metadata_dir: *Metadata_Dir
         metadata_folder_name: *Metadata_Folder
         split: "val"
-        cut: "5m"   # "10M"
+        cut: "5m"
         key: "1k_split"
         subsample: 0.25
         first_stage_key: "jpg"
