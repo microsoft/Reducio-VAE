@@ -1,0 +1,224 @@
+
+Devices: &Devices 4
+Num_Nodes: &Num_Nodes 1
+Frames: &Frames 16
+InFrames: &InFrames 16
+Resolution: &Resolution 256
+Fps: &Fps 16
+Image_log_every: &Image_log_every 1
+Ckpt_log_every: &Ckpt_log_every 500
+Warm_steps: &Warm_steps 0
+Warm_min_lr_disc: &Warm_min_lr_disc 1e-8
+Warm_min_lr: &Warm_min_lr 1e-6
+Batch_size: &Batch_size 2
+
+model:
+  base_learning_rate: 2e-5
+  target: ldm.models.reducio_vae.ReducioVAE
+  params:
+    monitor: "train/rec_loss"
+    embed_dim: 16
+    image_key: "jpg"
+    automatic_optimization: False
+    attn_precision: fp32
+    enable_2d: True
+    freeze_2d: False
+    freeze_3d: False
+    use_tiling: False
+    tile_overlap_factor: 0.25
+    tile_sample_min_size: 128
+
+    scheduler_config:
+      target: ldm.lr_scheduler.LambdaLinearScheduler
+      params:
+        warm_up_steps: [0]
+        cycle_lengths: [1000000]  
+        f_start: [1.]
+        f_max: [1.]
+        f_min: [1.e-2]
+
+    scheduler_disc_config:
+      target: ldm.lr_scheduler.WarmupLR
+      params:
+        warmup_factor: 0.1
+        warmup_start_iters: 5000
+        warmup_iters: 1000
+
+    lossconfig:
+      target: ldm.modules.losses.contperceptual.LPIPSWithDiscriminator
+      params:
+        disc_start: 10001
+        kl_weight: 1e-6
+        disc_weight: 0.05
+        use_adaptive_gan: True
+        enable_2d: False
+        rec_weight: 1.0 
+        loss_norm: 'l1'
+        perceptual_weight: 0.1
+        disc_loss_scale: 0.1
+        use_groupnorm: False
+        act_tanh: False
+
+    ddconfig_2d:
+      ch: 128
+      z_channels: 4
+      out_ch: 3
+      resolution: *Resolution
+      in_channels: 3
+      ch_mult: [ 1,2,4,4 ] 
+      num_res_blocks: 2
+      attn_resolutions: []
+      dropout: 0.0
+      out_z: False
+      use_checkpoint: True
+      fp32_attention: True
+      window_size: 128
+    
+    ddconfig:
+      ch: 128
+      ch_in: 128
+      f_t: 1
+      f_s: 4
+      out_ch: 3
+      z_channels: 16
+      resolution: *Resolution
+      in_channels: 3
+      temp_res: *Frames
+      ch_mult: [ 1,2,2,4,4,4]
+      ch_fuse: [-1,-1,2,3,-1,-1] 
+      fuse_type: 'attn'
+      num_res_blocks: 2
+      attn_resolutions: []
+      use_3d_conv: True
+      upsample_first: True
+      temp_up_first: True
+      use_proj: False
+      fuse_mid: True
+      use_checkpoint: True
+      pos_embed_mode: 't'
+      fp32_attention: True
+      window_size: 128
+
+
+data:
+  target: main.DataModuleFromConfig
+  params:
+    batch_size: *Batch_size # TODO need to change batch_size
+    num_workers: 4 # TODO 4xGPU_number
+    wrap: False
+    train:
+      target: ldm.data.webvid_dataset.WebVid
+      params:
+        dataset_name: "getty"
+        text_params: { "input": "text" }
+        video_params: {
+            "input_res_h": *Resolution, # todo: check the input_res_h
+            "input_res_w": *Resolution, # todo: check the input_res_w
+            tsfm_params: {
+                "norm_mean": [0.5, 0.5, 0.5],
+                "norm_std": [0.5, 0.5, 0.5],
+              },
+            "num_frames": *InFrames, # TBD, if not fix, remove
+            "prop_factor": *Fps,
+            "loading": "lax",
+          }
+        data_dir: /home/t2vg-a100-G4-13/t2vgusw2_videos
+        metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_videos
+        metadata_folder_name: "webvid10m_meta"
+        split: "train"
+        cut: "13M"   # "10M"
+        key: "wmrm_all_RandomSample1M_clean"
+        subsample: 1
+        first_stage_key: "jpg"
+        cond_stage_key: "txt"
+        skip_missing_files: True
+    validation:
+      target: ldm.data.webvid_dataset.WebVid
+      params:
+        dataset_name: "WebVid"
+        text_params: { "input": "text" }
+        video_params: {
+            "input_res_h": *Resolution, # todo: check the input_res_h
+            "input_res_w": *Resolution, # todo: check the input_res_w
+            tsfm_params: {
+                "norm_mean": [0.5, 0.5, 0.5],
+                "norm_std": [0.5, 0.5, 0.5],
+              },
+            "num_frames": *InFrames, # TBD, if not fix, remove
+            "prop_factor": *Fps,
+            "loading": "lax",
+          }
+        data_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/shutterstock_val_1k_split
+        metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
+        metadata_folder_name: "shutterstock_val_1k_split"
+        split: "val"
+        cut: "5m"   # "10M"
+        key: "1k_split"
+        subsample: 0.25
+        first_stage_key: "jpg"
+        cond_stage_key: "txt"
+        skip_missing_files: True
+    test:
+      target: ldm.data.webvid_dataset.WebVid
+      params:
+        dataset_name: "WebVid"
+        text_params: { "input": "text" }
+        video_params: {
+            "input_res_h": *Resolution, # todo: check the input_res_h
+            "input_res_w": *Resolution, # todo: check the input_res_w
+            tsfm_params: {
+                "norm_mean": [0.5, 0.5, 0.5],
+                "norm_std": [0.5, 0.5, 0.5],
+              },
+            "num_frames": *InFrames, # TBD, if not fix, remove
+            "prop_factor": *Fps,
+            "loading": "lax",
+          }
+        data_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/shutterstock_val_1k_split
+        metadata_dir: /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
+        metadata_folder_name: "shutterstock_val_1k_split"
+        split: "val"
+        cut: "5m"   # "10M"
+        key: "1k_split"
+        subsample: 0.25
+        first_stage_key: "jpg"
+        cond_stage_key: "txt"
+        skip_missing_files: True
+
+
+lightning:
+  modelcheckpoint:
+    params:
+      every_n_train_steps: *Ckpt_log_every # How many steps do you want to save checkpoints
+
+  callbacks:
+    metrics_over_trainsteps_checkpoint:
+      params:
+        every_n_train_steps: 2500
+
+    image_logger:
+      target: main.ImageLogger
+      params:
+        batch_frequency: *Image_log_every # TODO How many steps do you want to save visulization result
+        max_images: 8
+        increase_log_steps: False
+        log_images_kwargs: # TODO need to fix some visulization bugs
+          plot_progressive_rows: False, # Set this to False to save time
+          n_rows: *InFrames
+          video_fps: *Fps
+
+  trainer:
+    precision: "16" 
+    devices: *Devices # TODO need to specify if use gpu, if you want use cpu delete this line
+    num_nodes: *Num_Nodes # TODO numbers of node
+    benchmark: True
+    fast_dev_run: False
+    val_check_interval: 0.001
+    max_steps: 1000000
+    accumulate_grad_batches: 1
+
+
+  strategy:
+    target: pytorch_lightning.strategies.DDPStrategy
+    params:
+      find_unused_parameters: True # Default is True but is conflict with checkpointing
