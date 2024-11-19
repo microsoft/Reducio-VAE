@@ -1,5 +1,5 @@
 # Reducio-VAE
-Welcome to the official repository for **Reducio-VAE**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4*H/32*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
+Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4*H/32*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/) [![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/microsoft/Reducio-VAE)  
 
