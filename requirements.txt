@@ -21,7 +21,8 @@ numpy==1.24.4
 accelerate==0.32.1
 av==11.0.0 
 basicsr==1.4.2 
-decord loralib
+decord 
+loralib
 open_clip_torch 
 kornia 
 optimum 
