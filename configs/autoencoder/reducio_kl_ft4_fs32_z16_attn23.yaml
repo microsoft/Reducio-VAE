@@ -11,9 +11,9 @@ Warm_steps: &Warm_steps 0
 Warm_min_lr_disc: &Warm_min_lr_disc 1e-8
 Warm_min_lr: &Warm_min_lr 1e-6
 Batch_size: &Batch_size 4
-Data_Dir: &Data_Dir /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/shutterstock_val_1k_split
-Metadata_Dir: &Metadata_Dir  /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data
-Metadata_Folder: &Metadata_Folder "pexels_meta"
+Data_Dir: &Data_Dir /data/internal_data
+Metadata_Dir: &Metadata_Dir  /data/internal_data
+Metadata_Folder: &Metadata_Folder "meta_data"
 
 model:
   base_learning_rate: 2e-5
@@ -23,7 +23,6 @@ model:
     embed_dim: 16
     image_key: "jpg"
     automatic_optimization: False
-    attn_precision: fp32
     enable_2d: True
     freeze_2d: False
     freeze_3d: False
@@ -75,7 +74,6 @@ model:
       out_z: False
       use_checkpoint: True
       fp32_attention: True
-      window_size: 128
     
     ddconfig:
       ch: 128
@@ -93,8 +91,6 @@ model:
       attn_resolutions: []
       use_3d_conv: True
       upsample_first: True
-      temp_up_first: True
-      use_proj: False
       fuse_mid: True
       use_checkpoint: True
       pos_embed_mode: 't'
@@ -106,7 +102,7 @@ data:
   target: main.DataModuleFromConfig
   params:
     batch_size: *Batch_size # TODO need to change batch_size
-    num_workers: 4 # TODO 4xGPU_number
+    num_workers: 8
     wrap: False
     train:
       target: ldm.data.webvid_dataset.WebVid
@@ -114,13 +110,13 @@ data:
         dataset_name: "getty"
         text_params: { "input": "text" }
         video_params: {
-            "input_res_h": *Resolution, # todo: check the input_res_h
-            "input_res_w": *Resolution, # todo: check the input_res_w
+            "input_res_h": *Resolution,
+            "input_res_w": *Resolution,
             tsfm_params: {
                 "norm_mean": [0.5, 0.5, 0.5],
                 "norm_std": [0.5, 0.5, 0.5],
               },
-            "num_frames": *InFrames, # TBD, if not fix, remove
+            "num_frames": *InFrames,
             "prop_factor": *Fps,
             "loading": "lax",
           }
@@ -140,13 +136,13 @@ data:
         dataset_name: "WebVid"
         text_params: { "input": "text" }
         video_params: {
-            "input_res_h": *Resolution, # todo: check the input_res_h
-            "input_res_w": *Resolution, # todo: check the input_res_w
+            "input_res_h": *Resolution, 
+            "input_res_w": *Resolution, 
             tsfm_params: {
                 "norm_mean": [0.5, 0.5, 0.5],
                 "norm_std": [0.5, 0.5, 0.5],
               },
-            "num_frames": *InFrames, # TBD, if not fix, remove
+            "num_frames": *InFrames, 
             "prop_factor": *Fps,
             "loading": "lax",
           }
@@ -166,13 +162,13 @@ data:
         dataset_name: "WebVid"
         text_params: { "input": "text" }
         video_params: {
-            "input_res_h": *Resolution, # todo: check the input_res_h
-            "input_res_w": *Resolution, # todo: check the input_res_w
+            "input_res_h": *Resolution, 
+            "input_res_w": *Resolution, 
             tsfm_params: {
                 "norm_mean": [0.5, 0.5, 0.5],
                 "norm_std": [0.5, 0.5, 0.5],
               },
-            "num_frames": *InFrames, # TBD, if not fix, remove
+            "num_frames": *InFrames, 
             "prop_factor": *Fps,
             "loading": "lax",
           }
@@ -182,7 +178,7 @@ data:
         split: "val"
         cut: "5m"
         key: "1k_split"
-        subsample: 0.25
+        subsample: 1
         first_stage_key: "jpg"
         cond_stage_key: "txt"
         skip_missing_files: True
@@ -204,15 +200,15 @@ lightning:
         batch_frequency: *Image_log_every # TODO How many steps do you want to save visulization result
         max_images: 8
         increase_log_steps: False
-        log_images_kwargs: # TODO need to fix some visulization bugs
+        log_images_kwargs: 
           plot_progressive_rows: False, # Set this to False to save time
           n_rows: *InFrames
           video_fps: *Fps
 
   trainer:
     precision: "16" 
-    devices: *Devices # TODO need to specify if use gpu, if you want use cpu delete this line
-    num_nodes: *Num_Nodes # TODO numbers of node
+    devices: *Devices 
+    num_nodes: *Num_Nodes
     benchmark: True
     fast_dev_run: False
     val_check_interval: 0.001
@@ -223,4 +219,4 @@ lightning:
   strategy:
     target: pytorch_lightning.strategies.DDPStrategy
     params:
-      find_unused_parameters: True # Default is True but is conflict with checkpointing
+      find_unused_parameters: True 

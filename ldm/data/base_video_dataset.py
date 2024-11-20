@@ -34,14 +34,15 @@ def init_transform_dict(
         ),
         "val": transforms.Compose(
             [
-                # todo: should we use crop for validation and test?
-                transforms.Resize((input_res_h, input_res_w),antialias=True),
+                transforms.Resize(input_res_h, antialias=True),
+                transforms.CenterCrop((input_res_h, input_res_w)),
                 normalize,
             ]
         ),
         "test": transforms.Compose(
             [
-                transforms.Resize((input_res_h, input_res_w),antialias=True),
+                transforms.Resize(input_res_h, antialias=True),
+                transforms.CenterCrop((input_res_h, input_res_w)),
                 normalize,
             ]
         ),

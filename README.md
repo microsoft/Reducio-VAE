@@ -1,11 +1,18 @@
 # Reducio-VAE
+
 Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
+
+
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/) [![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/microsoft/Reducio-VAE)  
 
 
 ## WHAT CAN REDUCIO-VAE DO
 Reducio-VAE was developed to enable high compression ratio on videos, supporting efficient video generation. Existing 3D VAEs are generally extended from 2D VAE, which is designed for image generation and has large redundancy when handling video. Compared to 2D VAE, Reducio-VAE achieved 64x high compression ratio.
+<p align="center">
+<img src="./images/vae_network.png"  width="666">
+</p>
+
 
 A detailed discussion of Reducio-VAE, including how it was developed and tested, can be found in our [paper](https://arxiv.org/abs/).
 
@@ -23,18 +30,9 @@ We do not recommend using Reducio-VAE in the context of high-risk decision makin
 
 
 ## Installation
+Set up the environment with
 ```
-pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu121
-pip install --upgrade diffusers[torch]==0.29.0
-pip3 install -U xformers==0.0.26.post1 --index-url https://download.pytorch.org/whl/cu121
-pip install pytorch-lightning==2.0.1 psutil omegaconf==2.3.0
-pip install opencv-python scikit-image timm==0.9.16 tokenizers==0.15.2
-pip install scipy==1.9.1 tensorboardx==2.6 termcolor==2.4.0 
-pip install pandas==2.0.3 transformers==4.33.3 
-pip install einops datasets numpy==1.24.4 accelerate==0.32.1
-pip install av==11.0.0 basicsr==1.4.2 decord loralib
-pip install open_clip_torch kornia optimum bs4 wandb 
-pip install sentencepiece~=0.1.99 ftfy beautifulsoup4
+pip3 install -r requirements.txt
 ```
 
 
@@ -47,13 +45,33 @@ We directly trained Reducio-VAE from scratch on $256\*256$ resolution with 16 FP
 
 ### Training Scripts
 ```
+# training Reducio-VAE-ft4-fs32
 python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
 --node_rank=${NODE_RANK} \
 --nnodes=${NODE_COUNT} \
 --master_addr=${MASTER_ADDR} \
 --master_port=${MASTER_PORT} \
---use_env main.py -b ${config} -t -r ${output_dir} -k ${wandb_key}
+--use_env main.py \
+-b configs/autoencoder/reducio_kl_ft4_fs32_z16_attn23.yaml \
+-t -r ${output_dir} -k ${wandb_key}
 ```
+
+# Inference Scripts
+```
+# Inference with our pre-trained weights
+python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
+--master_addr=${MASTER_ADDR} \
+--master_port=${MASTER_PORT} \
+main.py -r ${output_dir} -t False \
+-b configs/autoencoder/reducio_kl_ft4_fs32_z16_attn23.yaml \
+--pretrained checkpoint/reducio-ft4-fs32-attn23.ckpt \ 
+-k ${wandb_key}
+```
+Users can adjust the `batch_frequency` params of  `Image_logger` in the config. Below is an example of logged input videos (top) sampled from [Pexels](https://www.pexels.com/) and reconstructed results (bottom) by Reducio-VAE :
+<p align="center">
+<img src="./images/example.gif"  width="666">
+</p>
+
 
 ## Model Zoo
 | name |  $f_t$ | $f_s$ |  checkpoint |

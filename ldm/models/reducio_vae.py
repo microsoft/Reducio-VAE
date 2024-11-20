@@ -502,7 +502,7 @@ class Encoder(nn.Module):
                  use_checkpoint=False,
                  fp32_attention=True,
                  double_z=True,
-                 window_size=(32, 32),
+                 window_size=(256, 256),
                  **ignore_kwargs):
         super().__init__()
         self.ch = ch
@@ -644,10 +644,10 @@ class FusionDecoder(nn.Module):
         fuse_type=None,
         use_3d_conv=True, 
         upsample_mode='interpolate',
-        upsample_first=False,
+        upsample_first=True,
         fuse_mid=False,
         fuse_mid_type=None,
-        use_checkpoint = False,
+        use_checkpoint=False,
         enable_fuse=True,
         pos_embed_mode='none',
         use_conv_shortcut=False,
@@ -655,7 +655,7 @@ class FusionDecoder(nn.Module):
         init_values=0.,
         norm_type='layer',
         mode='3d',
-        window_size=(32,32),
+        window_size=(256, 256),
         fp32_attention = True,
         **ignorekwargs
     ):

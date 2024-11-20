@@ -23,7 +23,7 @@ from pytorch_lightning.utilities import rank_zero_info
 
 
 from ldm.data.base import Txt2ImgIterableBaseDataset
-from ldm.util import instantiate_from_config
+from ldm.util import instantiate_from_config, default
 
 def default_trainer_args():
     argspec = dict(inspect.signature(Trainer.__init__).parameters)
@@ -198,6 +198,12 @@ def get_parser(**parser_kwargs):
         const=True,
         default=False, 
         help="experiment name shown in wandb",
+    )
+    parser.add_argument(
+        "--pretrained",
+         type=str,
+         default=None,
+         help="load pre-trained checkpoint file",
     )
     if version.parse(torch.__version__) >= version.parse("2.0.0"):
         parser.add_argument(
@@ -782,17 +788,10 @@ if __name__ == "__main__":
         lightning_config.trainer = trainer_config
 
         # model
-        if "strategy" in lightning_config and "DeepSpeed" in lightning_config['strategy']['target']:
-            config.model['enable_deepspeed'] = True
-        else:
-            config.model['enable_deepspeed'] = False
+        config.model.params['ckpt_path'] = default(opt.pretrained, config.model.params.get('ckpt_path', None))
         model = instantiate_from_config(config.model)
-
-        # #frozen spatial part
-        # for name, param in model.named_parameters():
-        #     if 'temporal' not in name:
-        #         print(name)
-        #         param.requires_grad = False
+        model = instantiate_from_config(config.model)
+        print(f"model config: {config.model}")
 
         # trainer and callbacks
         trainer_kwargs = dict()
