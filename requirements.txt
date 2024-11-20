@@ -14,7 +14,7 @@ scipy==1.9.1
 tensorboardx==2.6 
 termcolor==2.4.0 
 pandas==2.0.3 
-transformers==4.33.3 
+transformers==4.38.0 
 einops 
 datasets 
 numpy==1.24.4
