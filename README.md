@@ -1,5 +1,5 @@
 # Reducio-VAE
-Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4*H/32*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
+Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/) [![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/microsoft/Reducio-VAE)  
 
@@ -9,10 +9,10 @@ Reducio-VAE was developed to enable high compression ratio on videos, supporting
 
 A detailed discussion of Reducio-VAE, including how it was developed and tested, can be found in our [paper](https://arxiv.org/abs/).
 
-## INTENDED USES
+## Intended uses
 Reducio-VAE is best suited for supporting training your own video diffusion model for research purpose.
 
-## OUT-OF-SCOPE USES
+## Out-of-scope uses
 Reducio-VAE is not well suited for processing long videos. It currently can only handle 1-second video clips.
 
 We do not recommend using Reducio-VAE in commercial or real-world applications without further testing and development. It is being released for research purposes.
@@ -38,7 +38,7 @@ pip install sentencepiece~=0.1.99 ftfy beautifulsoup4
 ```
 
 
-## TRAINING
+## Training
 
 ### Training Method
 Training data was prepared by self-collecting. We recommend using Pexels or other high-quality videos.
@@ -61,7 +61,7 @@ python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
  Reducio-VAE | 2 | 32 | |
 | Reducio-VAE | 4 | 32 | |
 
-## EVALUATION
+## Evaluation
 
 Reducio-VAE performed best on high-quality videos, but worse on low-quality videos like UCF-101. The reason is that the visual quality of UCF-101 is low, where the prior content image is blurring in many cases.
 
@@ -78,12 +78,12 @@ Metrics on 1K Pexels validation set and UCF-101:
 |Reducio-VAE|$4\times32\times32$|16|35.88|0.94|0.05|17.88|65.17|
 
 
-## LIMITATIONS
+## Limitations
 Reducio-VAE was developed for research and experimental purposes. Further testing and validation are needed before considering its application in commercial or real-world scenarios.
 
 Currently, Reducio-VAE can only encode 16-frame video clips. Longer length is not supported.
 
-## LICENSE
+## License
 The code and model are licensed under the MIT license.
 
 ## Acknowledgements
