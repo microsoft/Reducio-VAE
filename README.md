@@ -88,7 +88,7 @@ The code and model are licensed under the MIT license.
 
 ## Acknowledgements
 
-Our code is built on top of [Stable Diffusion](https://github.com/Stability-AI/). We would like to thank the SD team for their foundational work.
+Our code is built on top of [Stable Diffusion](https://github.com/CompVis/stable-diffusion). We would like to thank the SD team for their foundational work.
 
 ## Citation
 
