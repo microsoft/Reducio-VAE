@@ -43,7 +43,7 @@ pip install sentencepiece~=0.1.99 ftfy beautifulsoup4
 ### Training Method
 Training data was prepared by self-collecting. We recommend using Pexels or other high-quality videos.
 
-We directly trained Reducio-VAE from scratch on $256*256$ resolution with 16 FPS. No further fine-tuning on $512*512$ or $1024*1024$. To use it on higher resolution, we split videos into tiles in spatial dimensions.
+We directly trained Reducio-VAE from scratch on $256\*256$ resolution with 16 FPS. No further fine-tuning on $512\*512$ or $1024\*1024$. To use it on higher resolution, we split videos into tiles in spatial dimensions.
 
 ### Training Scripts
 ```
@@ -58,8 +58,8 @@ python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
 ## Model Zoo
 | name |  $f_t$ | $f_s$ |  checkpoint |
 |:---:|:---:|:---:|:---:|
- Reducio-VAE | 2 | 32 | |
-| Reducio-VAE | 4 | 32 | |
+ Reducio-VAE | 2 | 32 | [huggingface](https://huggingface.co/microsoft/Reducio-VAE/blob/main/reducio-ft2-fs32-attn23.ckpt) |
+| Reducio-VAE | 4 | 32 | [huggingface](https://huggingface.co/microsoft/Reducio-VAE/blob/main/redicio-ft4-fs32-attn23.ckpt) |
 
 ## Evaluation
 
