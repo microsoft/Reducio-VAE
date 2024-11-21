@@ -1,10 +1,10 @@
 # Reducio-VAE
 
-Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
+Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/2411.13552) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
 
 
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/) [![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/microsoft/Reducio-VAE)  
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/2411.13552) [![HuggingFace Model](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/microsoft/Reducio-VAE)  
 
 
 ## WHAT CAN REDUCIO-VAE DO
@@ -14,7 +14,7 @@ Reducio-VAE was developed to enable high compression ratio on videos, supporting
 </p>
 
 
-A detailed discussion of Reducio-VAE, including how it was developed and tested, can be found in our [paper](https://arxiv.org/abs/).
+A detailed discussion of Reducio-VAE, including how it was developed and tested, can be found in our [paper](https://arxiv.org/abs/2411.13552).
 
 ## Intended uses
 Reducio-VAE is best suited for supporting training your own video diffusion model for research purpose.
@@ -77,7 +77,7 @@ Users can adjust the `batch_frequency` params of  `Image_logger` in the config. 
 | name |  $f_t$ | $f_s$ |  checkpoint |
 |:---:|:---:|:---:|:---:|
  Reducio-VAE | 2 | 32 | [huggingface](https://huggingface.co/microsoft/Reducio-VAE/blob/main/reducio-ft2-fs32-attn23.ckpt) |
-| Reducio-VAE | 4 | 32 | [huggingface](https://huggingface.co/microsoft/Reducio-VAE/blob/main/redicio-ft4-fs32-attn23.ckpt) |
+| Reducio-VAE | 4 | 32 | [huggingface](https://huggingface.co/microsoft/Reducio-VAE/blob/main/reducio-ft4-fs32-attn23.ckpt) |
 
 ## Evaluation
 
@@ -116,6 +116,6 @@ If you use our work, please cite:
 @article{tian2024reducio,
   title={REDUCIO! Generating 1024*1024 Video within 16 Seconds using Extremely Compressed Motion Latents},
   author={Tian, Rui and Dai, Qi and Bao, Jianmin and Qiu, Kai and Yang, Yifan and Luo, Chong and Wu, Zuxuan and Jiang, Yu-Gang},
-  journal={arXiv preprint arXiv:},
+  journal={arXiv preprint arXiv:2411.13552},
   year={2024}
 }
