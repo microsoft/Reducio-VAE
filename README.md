@@ -1,6 +1,6 @@
 # Reducio-VAE
 
-Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/2411.13552) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
+Welcome to the official repository for **Reducio Variational Autoencoder (Reducio-VAE)**! [Reducio-VAE](https://arxiv.org/abs/2411.13552) is a model for encoding videos into an extremely small latent space. It is part of the Reducio-DiT, which is a highly efficient video generation method. Reducio-VAE encodes a 16-frame video clip to $T/4\*H/32\*W/32$ latent space based on a content image prior, which enables 4096x compression rate on the videos. More details can be found in the paper.
 
 
 
@@ -8,7 +8,7 @@ Welcome to the official repository for **Reducio Varitional Autoencoder (Reducio
 
 
 ## WHAT CAN REDUCIO-VAE DO
-Reducio-VAE was developed to enable high compression ratio on videos, supporting efficient video generation. Existing 3D VAEs are generally extended from 2D VAE, which is designed for image generation and has large redundancy when handling video. Compared to 2D VAE, Reducio-VAE achieved 64x high compression ratio.
+Reducio-VAE was developed to enable high compression ratio on videos, supporting efficient video generation. Existing 3D VAEs are generally extended from 2D VAE, which is designed for image generation and has large redundancy when handling video. Compared to 2D VAE, Reducio-VAE achieved 64x higher compression ratio.
 <p align="center">
 <img src="./images/vae_network.png"  width="666">
 </p>
