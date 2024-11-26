@@ -101,6 +101,9 @@ Reducio-VAE was developed for research and experimental purposes. Further testin
 
 Currently, Reducio-VAE can only encode 16-frame video clips. Longer length is not supported.
 
+## Ethics Statement
+This work is purely a research project. Currently, we have no plans to incorporate it into a product or expand access to the public. We will also put Microsoft AI principles into practice when further developing the models. In our research paper, we account for the ethical concerns associated with text-image-to-video research. To mitigate issues associated with training data, we have implemented a rigorous filtering process to purge our training data of inappropriate content, such as explicit imagery and offensive language, to minimize the likelihood of generating inappropriate content. 
+
 ## License
 The code and model are licensed under the MIT license.
 
