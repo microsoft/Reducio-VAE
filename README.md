@@ -33,6 +33,9 @@ We do not recommend using Reducio-VAE in the context of high-risk decision makin
 Set up the environment with
 ```
 pip3 install -r requirements.txt
+git clone https://github.com/CompVis/taming-transformers.git
+cd taming-transformers/ && pip install -e. --user
+cd ../ 
 ```
 
 
@@ -56,9 +59,10 @@ python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
 -t -r ${output_dir} -k ${wandb_key}
 ```
 
-# Inference Scripts
+# Evaluation Scripts
+The script for evaluation of videos on common metrics (e.g., PSNR, SSIM, LPIPS):
 ```
-# Inference with our pre-trained weights
+# Testing with our pre-trained weights
 python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
 --master_addr=${MASTER_ADDR} \
 --master_port=${MASTER_PORT} \
@@ -67,11 +71,59 @@ main.py -r ${output_dir} -t False \
 --pretrained checkpoint/reducio-ft4-fs32-attn23.ckpt \ 
 -k ${wandb_key}
 ```
-Users can adjust the `batch_frequency` params of  `Image_logger` in the config. Below is an example of logged input videos (top) sampled from [Pexels](https://www.pexels.com/) and reconstructed results (bottom) by Reducio-VAE :
+Especially, for high-resolution videos (e.g., > 512px), we divide input videos into spatio-temporal tiles. As shown in example [config](configs/autoencoder/reducio_kl_ft2_fs32_z16_attn23_1024px.yaml) for $16\times1024\times1024$ videos, tilied inputs are enbaled by setting `use_tiling=True`.
+
+
+Moreover, users can adjust the `batch_frequency` params of  `Image_logger` in the config. Below is an example of logged input videos (top) sampled from [Pexels](https://www.pexels.com/) and reconstructed results (bottom) by Reducio-VAE :
 <p align="center">
 <img src="./images/example.gif"  width="666">
 </p>
 
+# Inference Scripts
+Furthermore, we provide the [scripts](scripts/extract_latent.py) for direct inference with Reducio-VAE. We give the example command for visualizing reconstructed videos and extracting video latents for follow-up training as below.
+
+Visualize reconstructed videos of 1024px in aspect ratio free mode:
+```
+python scripts/extract_latent.py \
+    --p_meta  path/to/your/video_metadata \
+    --dataroot path/to/your/video_dataroot \
+    --datasave path/to/your/save_latent_root \
+    --video_datasave path/to/your/save_vis_root \
+    --n_chunks 4 \
+    --chunk_idx 0 \
+    --load_nframes 16 \
+    --aspect_ratio_type '1024' \
+    --ar 0.57 \  # only used when need a specific aspect ratio 
+    --fps 16 \
+    --vae3d_config configs/autoencoder/reducio_kl_ft4_fs32_z16_attn23_1024px.yaml \
+    --vae3d_p_ckpt path/to/your/video_ckpt  \
+    --autocast_dtype fp16 \
+    --visualize true \
+    --save_latent false 
+```
+
+Extract latents for $16\times256\times256$ input videos
+```
+python scripts/extract_latent.py \
+    --p_meta  path/to/your/video_metadata \
+    --dataroot path/to/your/video_dataroot \
+    --datasave path/to/your/save_latent_root \
+    --n_chunks 4 \
+    --chunk_idx 0 \
+    --load_nframes 64 \ # thereby we get 4 video latent samples for each training videos
+    --width 256 --height 256 \
+    --fps 16 \
+    --vae3d_config configs/autoencoder/configs/autoencoder/reducio_kl_ft4_fs32_z16_attn23.yaml \
+    --vae3d_p_ckpt /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/motion_vae_1009_f16r256_ft2_fs5_2d128_3d128_interpolate_110k.ckpt \
+    --vae2d_p_ckpt data/sd-vae-ft-ema \
+    --autocast_dtype fp16 \
+    --visualize false \
+    --save_latent true  \
+    --enable_2d \ # extract 2d sd-vae feature for Reducio-DiT training 
+    --enable_openclip \ # extract openclip feature for Reducio-DiT training 
+    --enable_t5 \ # extract t5 text embedding for Reducio-DiT training 
+    --vae3d_del_decoder true
+```
 
 ## Model Zoo
 | name |  $f_t$ | $f_s$ |  checkpoint |

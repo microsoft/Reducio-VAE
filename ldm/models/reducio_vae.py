@@ -1237,7 +1237,6 @@ class ReducioVAE(pl.LightningModule):
                     x0_feats = self.encode_2d(x_2d, use_tiling)
             else:
                     x0_feats = self.encode_2d(x_2d, use_tiling)
-            x0_feats = [x0_feats[i] if (i in self.ch_fuse or i == len(x0_feats) - 1) else None for i in range(len(x0_feats))]
         else:
             x0_feats = None   
         
