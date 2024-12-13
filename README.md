@@ -59,7 +59,9 @@ python -m torch.distributed.launch --nproc_per_node=${GPU_PER_NODE_COUNT} \
 -t -r ${output_dir} -k ${wandb_key}
 ```
 
-# Evaluation Scripts
+## Evaluation 
+
+### Evaluation Scripts
 The script for evaluation of videos on common metrics (e.g., PSNR, SSIM, LPIPS):
 ```
 # Testing with our pre-trained weights
@@ -79,7 +81,7 @@ Moreover, users can adjust the `batch_frequency` params of  `Image_logger` in th
 <img src="./images/example.gif"  width="666">
 </p>
 
-# Inference Scripts
+### Inference Scripts
 Furthermore, we provide the [scripts](scripts/extract_latent.py) for direct inference with Reducio-VAE. We give the example command for visualizing reconstructed videos and extracting video latents for follow-up training as below.
 
 Visualize reconstructed videos of 1024px in aspect ratio free mode:
