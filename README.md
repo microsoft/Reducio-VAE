@@ -116,7 +116,7 @@ python scripts/extract_latent.py \
     --width 256 --height 256 \
     --fps 16 \
     --vae3d_config configs/autoencoder/configs/autoencoder/reducio_kl_ft4_fs32_z16_attn23.yaml \
-    --vae3d_p_ckpt /home/t2vg-a100-G4-13/t2vgusw2_ruitian/t2vg/data/motion_vae_1009_f16r256_ft2_fs5_2d128_3d128_interpolate_110k.ckpt \
+    --vae3d_p_ckpt path/to/your/video_ckpt \
     --vae2d_p_ckpt data/sd-vae-ft-ema \
     --autocast_dtype fp16 \
     --visualize false \
@@ -142,7 +142,7 @@ Metrics on 1K Pexels validation set and UCF-101:
 |Method|Downsample Factor|$\|z\|$|PSNR |SSIM |LPIPS |rFVD (Pexels)|rFVD (UCF-101)|
 |---------|---------------------|------------------|------------|--------------------|--------------|----------------|------------|
 |SD2.1-VAE|$1\times8\times8$|4|29.23|0.82|0.09|25.96|21.00| 
-|SDXL-VAE|$1\times8\times8$|16|30.54|0.85|0.08|19.87|23.68|
+|SDXL-VAE|$1\times8\times8$|4|30.54|0.85|0.08|19.87|23.68|
 |OmniTokenizer|$4\times8\times8$|8|27.11|0.89|0.07|23.88|30.52|
 |OpenSora-1.2|$4\times8\times8$|16|30.72|0.85|0.11|60.88|67.52|
 |Cosmos Tokenizer|$8\times8\times8$|16|30.84|0.74|0.12|29.44|22.06|
